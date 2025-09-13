@@ -1,4 +1,3 @@
-import { advocates } from "../schema";
 
 const specialties = [
   "Bipolar",
@@ -29,12 +28,7 @@ const specialties = [
   "Domestic abuse",
 ];
 
-const randomSpecialty = () => {
-  const random1 = Math.floor(Math.random() * 24);
-  const random2 = Math.floor(Math.random() * (24 - random1)) + random1 + 1;
-
-  return [random1, random2];
-};
+const takeRange = (start: number, end: number) => specialties.slice(start, end);
 
 const advocateData = [
   {
@@ -42,7 +36,7 @@ const advocateData = [
     lastName: "Doe",
     city: "New York",
     degree: "MD",
-    specialties: specialties.slice(...randomSpecialty()),
+    specialties: takeRange(0, 10),
     yearsOfExperience: 10,
     phoneNumber: 5551234567,
   },
@@ -51,7 +45,7 @@ const advocateData = [
     lastName: "Smith",
     city: "Los Angeles",
     degree: "PhD",
-    specialties: specialties.slice(...randomSpecialty()),
+    specialties: takeRange(10, 18),
     yearsOfExperience: 8,
     phoneNumber: 5559876543,
   },
@@ -60,7 +54,7 @@ const advocateData = [
     lastName: "Johnson",
     city: "Chicago",
     degree: "MSW",
-    specialties: specialties.slice(...randomSpecialty()),
+    specialties: takeRange(5, 15),
     yearsOfExperience: 5,
     phoneNumber: 5554567890,
   },
@@ -69,7 +63,7 @@ const advocateData = [
     lastName: "Brown",
     city: "Houston",
     degree: "MD",
-    specialties: specialties.slice(...randomSpecialty()),
+    specialties: takeRange(12, 22),
     yearsOfExperience: 12,
     phoneNumber: 5556543210,
   },
@@ -78,7 +72,7 @@ const advocateData = [
     lastName: "Davis",
     city: "Phoenix",
     degree: "PhD",
-    specialties: specialties.slice(...randomSpecialty()),
+    specialties: takeRange(2, 12),
     yearsOfExperience: 7,
     phoneNumber: 5553210987,
   },
@@ -87,7 +81,7 @@ const advocateData = [
     lastName: "Martinez",
     city: "Philadelphia",
     degree: "MSW",
-    specialties: specialties.slice(...randomSpecialty()),
+    specialties: takeRange(14, 24),
     yearsOfExperience: 9,
     phoneNumber: 5557890123,
   },
@@ -96,7 +90,7 @@ const advocateData = [
     lastName: "Taylor",
     city: "San Antonio",
     degree: "MD",
-    specialties: specialties.slice(...randomSpecialty()),
+    specialties: takeRange(0, 6),
     yearsOfExperience: 11,
     phoneNumber: 5554561234,
   },
@@ -105,7 +99,7 @@ const advocateData = [
     lastName: "Harris",
     city: "San Diego",
     degree: "PhD",
-    specialties: specialties.slice(...randomSpecialty()),
+    specialties: takeRange(6, 16),
     yearsOfExperience: 6,
     phoneNumber: 5557896543,
   },
@@ -114,7 +108,7 @@ const advocateData = [
     lastName: "Clark",
     city: "Dallas",
     degree: "MSW",
-    specialties: specialties.slice(...randomSpecialty()),
+    specialties: takeRange(8, 13),
     yearsOfExperience: 4,
     phoneNumber: 5550123456,
   },
@@ -123,7 +117,7 @@ const advocateData = [
     lastName: "Lewis",
     city: "San Jose",
     degree: "MD",
-    specialties: specialties.slice(...randomSpecialty()),
+    specialties: takeRange(15, 23),
     yearsOfExperience: 13,
     phoneNumber: 5553217654,
   },
@@ -132,7 +126,7 @@ const advocateData = [
     lastName: "Lee",
     city: "Austin",
     degree: "PhD",
-    specialties: specialties.slice(...randomSpecialty()),
+    specialties: takeRange(3, 11),
     yearsOfExperience: 10,
     phoneNumber: 5551238765,
   },
@@ -141,7 +135,7 @@ const advocateData = [
     lastName: "King",
     city: "Jacksonville",
     degree: "MSW",
-    specialties: specialties.slice(...randomSpecialty()),
+    specialties: takeRange(11, 19),
     yearsOfExperience: 5,
     phoneNumber: 5556540987,
   },
@@ -150,7 +144,7 @@ const advocateData = [
     lastName: "Green",
     city: "San Francisco",
     degree: "MD",
-    specialties: specialties.slice(...randomSpecialty()),
+    specialties: takeRange(4, 9),
     yearsOfExperience: 14,
     phoneNumber: 5559873456,
   },
@@ -159,7 +153,7 @@ const advocateData = [
     lastName: "Walker",
     city: "Columbus",
     degree: "PhD",
-    specialties: specialties.slice(...randomSpecialty()),
+    specialties: takeRange(9, 17),
     yearsOfExperience: 9,
     phoneNumber: 5556781234,
   },
@@ -168,7 +162,7 @@ const advocateData = [
     lastName: "Hall",
     city: "Fort Worth",
     degree: "MSW",
-    specialties: specialties.slice(...randomSpecialty()),
+    specialties: takeRange(7, 14),
     yearsOfExperience: 3,
     phoneNumber: 5559872345,
   },
