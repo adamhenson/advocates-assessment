@@ -2,6 +2,8 @@
 
 import { useEffect, useState } from "react";
 import type { Advocate } from "../types/advocate";
+import SearchBar from "@/components/SearchBar";
+import AdvocatesTable from "@/components/AdvocatesTable";
 
 export default function Home() {
   const [advocates, setAdvocates] = useState<Advocate[]>([]);
@@ -68,50 +70,13 @@ export default function Home() {
       <h1>Solace Advocates</h1>
       <br />
       <br />
-      <div>
-        <p>Search</p>
-        <p>Searching for: {searchTerm}</p>
-        <input className="border border-black rounded px-2 py-1" value={searchTerm} onChange={onChange} />
-        <button className="ml-2 px-3 py-1 border rounded" onClick={onClick}>Reset Search</button>
-      </div>
+      <SearchBar value={searchTerm} onChange={onChange} onReset={onClick} />
       <br />
       <br />
       {isLoading && <div>Loading advocates…</div>}
       {error && <div className="text-red-600">{error}</div>}
       {!isLoading && !error && (
-        <table className="w-full border-collapse">
-          <thead>
-            <tr>
-              <th className="text-left border-b p-2">First Name</th>
-              <th className="text-left border-b p-2">Last Name</th>
-              <th className="text-left border-b p-2">City</th>
-              <th className="text-left border-b p-2">Degree</th>
-              <th className="text-left border-b p-2">Specialties</th>
-              <th className="text-left border-b p-2">Years of Experience</th>
-              <th className="text-left border-b p-2">Phone Number</th>
-            </tr>
-          </thead>
-          <tbody>
-            {filteredAdvocates.map((advocate) => {
-              const rowKey = advocate.id ?? `${advocate.firstName}-${advocate.lastName}-${advocate.phoneNumber}`;
-              return (
-                <tr key={rowKey} className="hover:bg-gray-50">
-                  <td className="p-2">{advocate.firstName}</td>
-                  <td className="p-2">{advocate.lastName}</td>
-                  <td className="p-2">{advocate.city}</td>
-                  <td className="p-2">{advocate.degree}</td>
-                  <td className="p-2">
-                    {advocate.specialties.map((s, idx) => (
-                      <div key={`${rowKey}-spec-${idx}`}>{s}</div>
-                    ))}
-                  </td>
-                  <td className="p-2">{advocate.yearsOfExperience}</td>
-                  <td className="p-2">{advocate.phoneNumber}</td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
+        <AdvocatesTable advocates={filteredAdvocates} />
       )}
     </main>
   );
