@@ -1,6 +1,6 @@
 import { getDb } from "../../../db";
 import { advocates } from "../../../db/schema";
-import { and, asc, desc, ilike, or, sql } from "drizzle-orm";
+import { asc, desc, ilike, or, sql } from "drizzle-orm";
 
 export async function GET(req: Request) {
   try {

@@ -51,61 +51,35 @@ export default function Home() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   useEffect(() => {
-    const handler = setTimeout(() => {
-      const q = searchTerm.toLowerCase();
-      const filtered = advocates.filter((advocate) => {
-        const first = advocate.firstName?.toLowerCase?.() || "";
-        const last = advocate.lastName?.toLowerCase?.() || "";
-        const city = advocate.city?.toLowerCase?.() || "";
-        const degree = advocate.degree?.toLowerCase?.() || "";
-        const specs = Array.isArray(advocate.specialties) ? advocate.specialties : [];
-        const years = advocate.yearsOfExperience?.toString?.() || "";
-
-        return (
-          first.includes(q) ||
-          last.includes(q) ||
-          city.includes(q) ||
-          degree.includes(q) ||
-          specs.some((s) => s.toLowerCase().includes(q)) ||
-          years.includes(q)
-        );
-      });
-      const sorted = [...filtered].sort((a, b) => {
-        const dir = sortDirection === "asc" ? 1 : -1;
-        const getVal = (v: any) => (v ?? "").toString().toLowerCase();
-        if (sortField === "yearsOfExperience") {
-          return (a.yearsOfExperience - b.yearsOfExperience) * dir;
-        }
-        const av = getVal(a[sortField]);
-        const bv = getVal(b[sortField]);
-        if (av < bv) return -1 * dir;
-        if (av > bv) return 1 * dir;
-        return 0;
-      });
-      setFilteredAdvocates(sorted);
-      setPage(1);
-    }, 200);
-
-    return () => clearTimeout(handler);
-  }, [searchTerm, advocates, sortField, sortDirection]);
-
-  useEffect(() => {
-    const run = async () => {
+    const controller = new AbortController();
+    const handler = setTimeout(async () => {
       try {
         setIsLoading(true);
-        setError(null);
-        const response = await fetch("/api/advocates");
-        const json: { data: Advocate[] } = await response.json();
+        const params = new URLSearchParams();
+        if (searchTerm) params.set("q", searchTerm);
+        if (sortField) params.set("sort", sortField);
+        if (sortDirection) params.set("dir", sortDirection);
+        params.set("page", String(page));
+        params.set("size", String(pageSize));
+        const res = await fetch(`/api/advocates?${params.toString()}`, {
+          signal: controller.signal,
+        });
+        const json: { data: Advocate[]; total: number; page: number; size: number } = await res.json();
         setAdvocates(json.data);
         setFilteredAdvocates(json.data);
-      } catch (e: any) {
-        setError("Failed to load advocates");
+      } catch (e) {
+        // ignore aborts
       } finally {
         setIsLoading(false);
       }
+    }, 200);
+    return () => {
+      controller.abort();
+      clearTimeout(handler);
     };
-    run();
-  }, []);
+  }, [searchTerm, sortField, sortDirection, page, pageSize]);
+
+  // initial fetch handled by the effect above
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const nextTerm = e.target.value;
