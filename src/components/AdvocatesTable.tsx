@@ -8,9 +8,12 @@ import type { Advocate } from "@/types/advocate";
  */
 const AdvocatesTable = ({
   advocates,
+  onSelect,
 }: {
   /** Rows to display */
   advocates: Advocate[];
+  /** Row select handler */
+  onSelect?: (a: Advocate) => void;
 }) => {
   return (
     <div className="overflow-x-auto">
@@ -30,7 +33,11 @@ const AdvocatesTable = ({
           {advocates.map((advocate) => {
             const rowKey = advocate.id ?? `${advocate.firstName}-${advocate.lastName}-${advocate.phoneNumber}`;
             return (
-              <tr key={rowKey} className="hover:bg-gray-50">
+              <tr
+                key={rowKey}
+                className="hover:bg-gray-50 cursor-pointer"
+                onClick={() => onSelect?.(advocate)}
+              >
                 <td className="p-2">{advocate.firstName}</td>
                 <td className="p-2">{advocate.lastName}</td>
                 <td className="p-2">{advocate.city}</td>

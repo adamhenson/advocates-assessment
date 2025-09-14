@@ -6,6 +6,7 @@ import SearchBar from "@/components/SearchBar";
 import AdvocatesTable from "@/components/AdvocatesTable";
 import SortControls from "@/components/SortControls";
 import Pagination from "@/components/Pagination";
+import AdvocateDetailsModal from "@/components/AdvocateDetailsModal";
 
 export default function Home() {
   const [advocates, setAdvocates] = useState<Advocate[]>([]);
@@ -19,6 +20,7 @@ export default function Home() {
   const [sortDirection, setSortDirection] = useState<"asc" | "desc">("asc");
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
+  const [selected, setSelected] = useState<Advocate | null>(null);
   // Sync URL state
   useEffect(() => {
     const params = new URLSearchParams();
@@ -158,7 +160,9 @@ export default function Home() {
               (page - 1) * pageSize,
               page * pageSize
             )}
+            onSelect={setSelected}
           />
+          <AdvocateDetailsModal advocate={selected} onClose={() => setSelected(null)} />
         </>
       )}
     </main>
