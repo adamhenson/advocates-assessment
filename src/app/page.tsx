@@ -5,6 +5,7 @@ import type { Advocate } from "../types/advocate";
 import SearchBar from "@/components/SearchBar";
 import AdvocatesTable from "@/components/AdvocatesTable";
 import SortControls from "@/components/SortControls";
+import Pagination from "@/components/Pagination";
 
 export default function Home() {
   const [advocates, setAdvocates] = useState<Advocate[]>([]);
@@ -16,6 +17,8 @@ export default function Home() {
     "firstName" | "lastName" | "city" | "degree" | "yearsOfExperience"
   >("lastName");
   const [sortDirection, setSortDirection] = useState<"asc" | "desc">("asc");
+  const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
   useEffect(() => {
     const handler = setTimeout(() => {
       const q = searchTerm.toLowerCase();
@@ -49,6 +52,7 @@ export default function Home() {
         return 0;
       });
       setFilteredAdvocates(sorted);
+      setPage(1);
     }, 200);
 
     return () => clearTimeout(handler);
@@ -101,7 +105,29 @@ export default function Home() {
       {isLoading && <div>Loading advocates…</div>}
       {error && <div className="text-red-600">{error}</div>}
       {!isLoading && !error && (
-        <AdvocatesTable advocates={filteredAdvocates} />
+        <>
+          <div className="flex items-center justify-between my-3">
+            <div className="text-sm text-gray-600">
+              {filteredAdvocates.length} results
+            </div>
+            <Pagination
+              page={page}
+              pageSize={pageSize}
+              total={filteredAdvocates.length}
+              onChangePage={setPage}
+              onChangePageSize={(size) => {
+                setPageSize(size);
+                setPage(1);
+              }}
+            />
+          </div>
+          <AdvocatesTable
+            advocates={filteredAdvocates.slice(
+              (page - 1) * pageSize,
+              page * pageSize
+            )}
+          />
+        </>
       )}
     </main>
   );
