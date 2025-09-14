@@ -113,3 +113,53 @@ useEffect(() => {
 }, [onClose]);
 ```
 
+## Truncate long specialties lists
+- Long specialty arrays make rows tall and reduce scannability. Truncate in the table view and offer an explicit way to see all items.
+- Client strategies:
+  - Render only the first N (e.g., 5) with an “+X more” tail that opens the details modal.
+  - Or visually truncate using CSS line clamping for a single paragraph string.
+- API strategy (optional):
+  - Return `specialtiesPreview: string[]` (first N) and `specialtiesCount: number`, plus the full array in the details endpoint or on row click. This reduces payload size for large lists.
+
+Examples:
+```tsx
+// Table cell
+const max = 5;
+const preview = advocate.specialties.slice(0, max);
+const extra = Math.max(0, advocate.specialties.length - max);
+
+<td className="p-2">
+  {preview.map((s, i) => (
+    <div key={i}>{s}</div>
+  ))}
+  {extra > 0 && (
+    <button type="button" className="underline text-sm" onClick={() => onSelect(advocate)}>
+      +{extra} more
+    </button>
+  )}
+</td>
+```
+
+```tsx
+// Line clamp variant (requires Tailwind line-clamp plugin or custom CSS)
+<p className="line-clamp-2 text-sm text-gray-700">
+  {advocate.specialties.join(', ')}
+  <button type="button" className="ml-1 underline" onClick={() => onSelect(advocate)}>
+    Show more
+  </button>
+  
+</p>
+```
+
+## Adopt a headless data table (TanStack Table) with Tailwind
+- Recommendation: use TanStack Table (React Table) to provide a robust, accessible, and fully customizable data grid, styled with Tailwind. For a quick start, consider the shadcn/ui DataTable example which wraps TanStack in Tailwind-friendly primitives.
+- Why: we retain control over markup and styling, while getting column definitions, sorting, filtering, pagination (client/server), column visibility, row selection, and virtualization out of the box.
+- Integration notes:
+  - Keep server-driven pagination/sorting; wire TanStack’s `onSortingChange`, `onPaginationChange` to URL params and API calls.
+  - Use `react-window` or TanStack’s integration examples for virtualized rows.
+  - Implement a cell renderer for specialties with preview/truncation logic; open the modal on “+X more”.
+  - Preserve a11y: ensure header `scope`, keyboard navigation, focus handling for the details modal.
+- References:
+  - TanStack Table: `https://tanstack.com/table/latest`
+  - shadcn/ui DataTable: `https://ui.shadcn.com/docs/components/data-table`
+
