@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import type { Advocate } from "../types/advocate";
 import SearchBar from "@/components/SearchBar";
 import AdvocatesTable from "@/components/AdvocatesTable";
@@ -19,6 +19,35 @@ export default function Home() {
   const [sortDirection, setSortDirection] = useState<"asc" | "desc">("asc");
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
+  // Sync URL state
+  useEffect(() => {
+    const params = new URLSearchParams();
+    if (searchTerm) params.set("q", searchTerm);
+    if (sortField !== "lastName") params.set("sort", sortField);
+    if (sortDirection !== "asc") params.set("dir", sortDirection);
+    if (page !== 1) params.set("page", String(page));
+    if (pageSize !== 10) params.set("size", String(pageSize));
+    const qs = params.toString();
+    const url = qs ? `?${qs}` : "";
+    window.history.replaceState(null, "", url);
+  }, [searchTerm, sortField, sortDirection, page, pageSize]);
+
+  // Initialize from URL on load
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const q = params.get("q");
+    const sort = params.get("sort") as any;
+    const dir = params.get("dir") as any;
+    const p = parseInt(params.get("page") || "1", 10);
+    const size = parseInt(params.get("size") || "10", 10);
+    if (q) setSearchTerm(q);
+    if (sort && ["firstName", "lastName", "city", "degree", "yearsOfExperience"].includes(sort)) setSortField(sort);
+    if (dir && ["asc", "desc"].includes(dir)) setSortDirection(dir);
+    if (!Number.isNaN(p) && p > 0) setPage(p);
+    if (!Number.isNaN(size) && [10, 25, 50].includes(size)) setPageSize(size);
+    // run once
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   useEffect(() => {
     const handler = setTimeout(() => {
       const q = searchTerm.toLowerCase();
