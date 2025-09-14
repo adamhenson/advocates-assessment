@@ -111,9 +111,8 @@ export default function Home() {
       <br />
       <br />
       {isLoading && (
-        <div className="text-gray-600 flex items-center gap-2">
+        <div className="fixed inset-0 z-50 flex items-center justify-center">
           <Spinner />
-          <span>Loading advocates…</span>
         </div>
       )}
       {error && <div className="text-red-600">{error}</div>}
