@@ -151,3 +151,15 @@ const extra = Math.max(0, advocate.specialties.length - max);
 </p>
 ```
 
+## Adopt a headless data table (TanStack Table) with Tailwind
+- Recommendation: use TanStack Table (React Table) to provide a robust, accessible, and fully customizable data grid, styled with Tailwind. For a quick start, consider the shadcn/ui DataTable example which wraps TanStack in Tailwind-friendly primitives.
+- Why: we retain control over markup and styling, while getting column definitions, sorting, filtering, pagination (client/server), column visibility, row selection, and virtualization out of the box.
+- Integration notes:
+  - Keep server-driven pagination/sorting; wire TanStack’s `onSortingChange`, `onPaginationChange` to URL params and API calls.
+  - Use `react-window` or TanStack’s integration examples for virtualized rows.
+  - Implement a cell renderer for specialties with preview/truncation logic; open the modal on “+X more”.
+  - Preserve a11y: ensure header `scope`, keyboard navigation, focus handling for the details modal.
+- References:
+  - TanStack Table: `https://tanstack.com/table/latest`
+  - shadcn/ui DataTable: `https://ui.shadcn.com/docs/components/data-table`
+
