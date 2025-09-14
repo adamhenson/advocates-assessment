@@ -102,9 +102,12 @@ export default function Home() {
       </div>
       <br />
       <br />
-      {isLoading && <div>Loading advocates…</div>}
+      {isLoading && <div className="text-gray-600">Loading advocates…</div>}
       {error && <div className="text-red-600">{error}</div>}
-      {!isLoading && !error && (
+      {!isLoading && !error && filteredAdvocates.length === 0 && (
+        <div className="text-gray-600">No results. Try adjusting your search.</div>
+      )}
+      {!isLoading && !error && filteredAdvocates.length > 0 && (
         <>
           <div className="flex items-center justify-between my-3">
             <div className="text-sm text-gray-600">
