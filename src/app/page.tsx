@@ -161,6 +161,7 @@ export default function Home() {
               page * pageSize
             )}
             onSelect={setSelected}
+            query={searchTerm}
           />
           <AdvocateDetailsModal advocate={selected} onClose={() => setSelected(null)} />
         </>

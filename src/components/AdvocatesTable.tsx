@@ -2,6 +2,7 @@
 
 import React from "react";
 import type { Advocate } from "@/types/advocate";
+import Highlight from "@/components/Highlight";
 
 /**
  * Accessible advocates table
@@ -9,11 +10,14 @@ import type { Advocate } from "@/types/advocate";
 const AdvocatesTable = ({
   advocates,
   onSelect,
+  query,
 }: {
   /** Rows to display */
   advocates: Advocate[];
   /** Row select handler */
   onSelect?: (a: Advocate) => void;
+  /** Active search term for highlighting */
+  query?: string;
 }) => {
   return (
     <div className="overflow-x-auto">
@@ -38,17 +42,19 @@ const AdvocatesTable = ({
                 className="hover:bg-gray-50 cursor-pointer"
                 onClick={() => onSelect?.(advocate)}
               >
-                <td className="p-2">{advocate.firstName}</td>
-                <td className="p-2">{advocate.lastName}</td>
-                <td className="p-2">{advocate.city}</td>
-                <td className="p-2">{advocate.degree}</td>
+                <td className="p-2"><Highlight text={advocate.firstName} query={query || ""} /></td>
+                <td className="p-2"><Highlight text={advocate.lastName} query={query || ""} /></td>
+                <td className="p-2"><Highlight text={advocate.city} query={query || ""} /></td>
+                <td className="p-2"><Highlight text={advocate.degree} query={query || ""} /></td>
                 <td className="p-2">
                   {advocate.specialties.map((s, idx) => (
-                    <div key={`${rowKey}-spec-${idx}`}>{s}</div>
+                    <div key={`${rowKey}-spec-${idx}`}>
+                      <Highlight text={s} query={query || ""} />
+                    </div>
                   ))}
                 </td>
-                <td className="p-2">{advocate.yearsOfExperience}</td>
-                <td className="p-2">{advocate.phoneNumber}</td>
+                <td className="p-2"><Highlight text={advocate.yearsOfExperience} query={query || ""} /></td>
+                <td className="p-2"><Highlight text={advocate.phoneNumber} query={query || ""} /></td>
               </tr>
             );
           })}
