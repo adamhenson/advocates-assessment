@@ -7,6 +7,7 @@ import AdvocatesTable from "@/components/AdvocatesTable";
 import SortControls from "@/components/SortControls";
 import Pagination from "@/components/Pagination";
 import AdvocateDetailsModal from "@/components/AdvocateDetailsModal";
+import Spinner from "@/components/Spinner";
 
 export default function Home() {
   const [advocates, setAdvocates] = useState<Advocate[]>([]);
@@ -107,7 +108,12 @@ export default function Home() {
       </div>
       <br />
       <br />
-      {isLoading && <div className="text-gray-600">Loading advocates…</div>}
+      {isLoading && (
+        <div className="text-gray-600 flex items-center gap-2">
+          <Spinner />
+          <span>Loading advocates…</span>
+        </div>
+      )}
       {error && <div className="text-red-600">{error}</div>}
       {!isLoading && !error && filteredAdvocates.length === 0 && (
         <div className="text-gray-600">No results. Try adjusting your search.</div>
