@@ -22,6 +22,7 @@ export default function Home() {
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [selected, setSelected] = useState<Advocate | null>(null);
+  const [hasFetched, setHasFetched] = useState(false);
   // Sync URL state
   useEffect(() => {
     const params = new URLSearchParams();
@@ -53,9 +54,9 @@ export default function Home() {
   }, []);
   useEffect(() => {
     const controller = new AbortController();
+    setIsLoading(true);
     const handler = setTimeout(async () => {
       try {
-        setIsLoading(true);
         const params = new URLSearchParams();
         if (searchTerm) params.set("q", searchTerm);
         if (sortField) params.set("sort", sortField);
@@ -68,6 +69,7 @@ export default function Home() {
         const json: { data: Advocate[]; total: number; page: number; size: number } = await res.json();
         setAdvocates(json.data);
         setFilteredAdvocates(json.data);
+        setHasFetched(true);
       } catch (e) {
         // ignore aborts
       } finally {
@@ -115,7 +117,7 @@ export default function Home() {
         </div>
       )}
       {error && <div className="text-red-600">{error}</div>}
-      {!isLoading && !error && filteredAdvocates.length === 0 && (
+      {!isLoading && !error && hasFetched && filteredAdvocates.length === 0 && (
         <div className="text-gray-600">No results. Try adjusting your search.</div>
       )}
       {!isLoading && !error && filteredAdvocates.length > 0 && (
