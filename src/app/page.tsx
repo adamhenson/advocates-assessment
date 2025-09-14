@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import type { Advocate } from "../types/advocate";
 import SearchBar from "@/components/SearchBar";
 import AdvocatesTable from "@/components/AdvocatesTable";
+import SortControls from "@/components/SortControls";
 
 export default function Home() {
   const [advocates, setAdvocates] = useState<Advocate[]>([]);
@@ -11,6 +12,10 @@ export default function Home() {
   const [searchTerm, setSearchTerm] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [sortField, setSortField] = useState<
+    "firstName" | "lastName" | "city" | "degree" | "yearsOfExperience"
+  >("lastName");
+  const [sortDirection, setSortDirection] = useState<"asc" | "desc">("asc");
   useEffect(() => {
     const handler = setTimeout(() => {
       const q = searchTerm.toLowerCase();
@@ -31,11 +36,23 @@ export default function Home() {
           years.includes(q)
         );
       });
-      setFilteredAdvocates(filtered);
+      const sorted = [...filtered].sort((a, b) => {
+        const dir = sortDirection === "asc" ? 1 : -1;
+        const getVal = (v: any) => (v ?? "").toString().toLowerCase();
+        if (sortField === "yearsOfExperience") {
+          return (a.yearsOfExperience - b.yearsOfExperience) * dir;
+        }
+        const av = getVal(a[sortField]);
+        const bv = getVal(b[sortField]);
+        if (av < bv) return -1 * dir;
+        if (av > bv) return 1 * dir;
+        return 0;
+      });
+      setFilteredAdvocates(sorted);
     }, 200);
 
     return () => clearTimeout(handler);
-  }, [searchTerm, advocates]);
+  }, [searchTerm, advocates, sortField, sortDirection]);
 
   useEffect(() => {
     const run = async () => {
@@ -70,7 +87,15 @@ export default function Home() {
       <h1>Solace Advocates</h1>
       <br />
       <br />
-      <SearchBar value={searchTerm} onChange={onChange} onReset={onClick} />
+      <div className="flex items-center justify-between gap-4 flex-wrap">
+        <SearchBar value={searchTerm} onChange={onChange} onReset={onClick} />
+        <SortControls
+          sortField={sortField}
+          sortDirection={sortDirection}
+          onChangeField={setSortField}
+          onChangeDirection={setSortDirection}
+        />
+      </div>
       <br />
       <br />
       {isLoading && <div>Loading advocates…</div>}
